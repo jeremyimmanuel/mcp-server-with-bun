@@ -22,12 +22,12 @@ server.tool(
     countRFunction
 );
 
-console.log("[INFO]: Starting server")
+console.info("[INFO]: Starting server")
 
 async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error("[INFO]: CountR MCP Server running on stdio");
+    console.info("[INFO]: CountR MCP Server running on stdio");
 };
 
 main()
