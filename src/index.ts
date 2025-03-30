@@ -2,7 +2,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import { countRFunction } from "./tools/countR";
+import { countRFunction } from "./tools/count-r";
+import { searchPage } from "./tools/notion";
 
 const server = new McpServer({
     name: "mcp-server-with-bun",
@@ -22,12 +23,19 @@ server.tool(
     countRFunction
 );
 
-console.info("[INFO]: Starting server")
+server.tool(
+    "notion-search-page",
+    "Search page in my notion workspace (Jeremy's private workspace)",
+    {
+        query: z.string()
+    },
+    searchPage
+);
 
 async function main() {
+    console.log("Starting server...")
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.info("[INFO]: CountR MCP Server running on stdio");
 };
 
 main()
