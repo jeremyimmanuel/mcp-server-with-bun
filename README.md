@@ -31,11 +31,14 @@ Make sure to include this config in your `claude_desktop_config.json` file.
 ```json
 {
   "mcpServers": {
-    "countR": {
-      "command": [PATH-to-bun],
+    "mcp-server-playground": {
+      "command": "PATH-to-bun",
       "args": [
-        [PATH-to-index.ts]
-      ]
+        "PATH-to-index.ts"
+      ],
+      "env": {
+        "NOTION_TOKEN": "YOUR_NOTION_TOKEN"
+      }
     },
   },
 }
