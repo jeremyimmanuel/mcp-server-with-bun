@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import type { GetPageResponse } from "@notionhq/client/build/src/api-endpoints";
 import { config } from "dotenv"
 import { z } from "zod";
 
@@ -24,14 +25,24 @@ type GenericTextReturnType = z.infer<typeof textToolReturnType>
  * @returns
  */
 export const searchPage = async ({ query }: { query: string}): Promise<GenericTextReturnType> => {
-    const searchResponse = await notion.search({
-        query,
-        filter: {
-            property: "object",
-            value: "page"
-        },
-        page_size: 5
-    });
+    let searchResponse;
+    try {
+        searchResponse = await notion.search({
+            query,
+            filter: {
+                property: "object",
+                value: "page"
+            },
+            page_size: 5
+        });
+    } catch (error) {
+        return {
+            content: [{
+                type: "text",
+                text: `${error.code}: ${process.env.NOTION_TOKEN}`
+            }]
+        }
+    }
     console.log("jeremy searchResponse", searchResponse)
     const pageIds = searchResponse?.results?.map(page => page.id);
     if (pageIds.length === 0) {
@@ -54,3 +65,23 @@ export const searchPage = async ({ query }: { query: string}): Promise<GenericTe
         ]
     }
 };
+
+/**
+ * MCP Tool
+ * @param param0
+ * @returns
+ */
+export const retrievePage = async ({ pageId }: { pageId: string}): Promise<GenericTextReturnType> => {
+    const retrievePageResponse: GetPageResponse = await notion.pages.retrieve({
+        page_id: pageId
+    });
+
+    return {
+        content: [
+            {
+                type: "text",
+                text: JSON.stringify(retrievePageResponse)
+            }
+        ]
+    }
+}

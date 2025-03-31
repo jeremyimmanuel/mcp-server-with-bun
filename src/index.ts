@@ -1,9 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { countRFunction } from "./tools/count-r";
-import { searchPage } from "./tools/notion";
+import { retrievePage, searchPage } from "./tools/notion";
 
 const server = new McpServer({
     name: "mcp-server-with-bun",
@@ -31,6 +30,15 @@ server.tool(
     },
     searchPage
 );
+
+server.tool(
+    "notion-retrieve-page",
+    "Retrieve notion page and get the page's following information id, create time, last edited time, created by, last edited by, cover, icon, parent, archived, in trash, properties, url, public url",
+    {
+        pageId: z.string()
+    },
+    retrievePage
+)
 
 async function main() {
     console.log("Starting server...")
