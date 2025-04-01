@@ -84,4 +84,57 @@ export const retrievePage = async ({ pageId }: { pageId: string}): Promise<Gener
             }
         ]
     }
-}
+};
+
+/**
+ *
+ * @param param0
+ * @returns
+ */
+export const createSimplePageInsidePage = async ({
+    parentPageId,
+    title,
+    description
+}: {
+    parentPageId: string,
+    title: string,
+    description?: string
+}): Promise<GenericTextReturnType> => {
+    try {
+        const response = await notion.pages.create({
+            parent: {
+                page_id: parentPageId,
+            },
+            properties: {
+                // Since this is under a page, the only option is "title"
+                "title": {
+                    title: [
+                        {
+                            text: {
+                            content: title,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: JSON.stringify(response),
+                }
+            ]
+        };
+    } catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: JSON.stringify(error),
+                }
+            ]
+        };
+    }
+  };

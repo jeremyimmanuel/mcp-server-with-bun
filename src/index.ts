@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { countRFunction } from "./tools/count-r";
-import { retrievePage, searchPage } from "./tools/notion";
+import { retrievePage, searchPage, createSimplePageInsidePage } from "./tools/notion";
 
 const server = new McpServer({
     name: "mcp-server-with-bun",
@@ -38,6 +38,17 @@ server.tool(
         pageId: z.string()
     },
     retrievePage
+);
+
+server.tool(
+    "notion-create-page",
+    "Given a parentPageId, title, and description, create a notion page under the parent page. Description is optional, so try to generate the description from the conversation.",
+    {
+        parentPageId: z.string(),
+        title: z.string(),
+        description: z.string().optional(),
+    },
+    createSimplePageInsidePage
 )
 
 async function main() {
