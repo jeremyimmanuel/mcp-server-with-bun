@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { countRFunction } from "./tools/count-r";
-import { retrievePage, searchPage, createSimplePageInsidePage } from "./tools/notion";
+import { retrievePage, searchPage, createSimplePageInsidePage, appendBlock } from "./tools/notion";
 
 const server = new McpServer({
     name: "mcp-server-with-bun",
@@ -49,6 +49,16 @@ server.tool(
         description: z.string().optional(),
     },
     createSimplePageInsidePage
+);
+
+server.tool(
+    "notion-append-block",
+    "Given blockId or pageId, append a block within the block/page.",
+    {
+        blockId: z.string(),
+        children: z.array(z.object({}))
+    },
+    appendBlock
 )
 
 async function main() {

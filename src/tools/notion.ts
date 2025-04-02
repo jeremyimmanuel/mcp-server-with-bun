@@ -1,5 +1,5 @@
 import { Client } from "@notionhq/client";
-import type { GetPageResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { BlockObjectRequest, GetPageResponse } from "@notionhq/client/build/src/api-endpoints";
 import { config } from "dotenv"
 import { z } from "zod";
 
@@ -43,7 +43,6 @@ export const searchPage = async ({ query }: { query: string}): Promise<GenericTe
             }]
         }
     }
-    console.log("jeremy searchResponse", searchResponse)
     const pageIds = searchResponse?.results?.map(page => page.id);
     if (pageIds.length === 0) {
         return {
@@ -138,3 +137,25 @@ export const createSimplePageInsidePage = async ({
         };
     }
   };
+
+export const appendBlock = async({
+    blockId,
+    children,
+}: {
+    blockId: string,
+    children: Array<BlockObjectRequest>
+}) => {
+    const response = await notion.blocks.children.append({
+        block_id: blockId,
+        children: children,
+    });
+
+    return {
+        content: [
+            {
+                type: "text",
+                text: JSON.stringify(response),
+            }
+        ]
+    };
+};
