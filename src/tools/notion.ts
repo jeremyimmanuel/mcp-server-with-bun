@@ -1,7 +1,8 @@
 import { Client } from "@notionhq/client";
-import type { BlockObjectRequest, GetPageResponse } from "@notionhq/client/build/src/api-endpoints";
-import { config } from "dotenv"
-import { z } from "zod";
+import type { BlockObjectRequestWithoutChildren, GetPageResponse } from "@notionhq/client/build/src/api-endpoints";
+import { config } from "dotenv";
+
+import type { GenericTextReturnType } from "../utils/type";
 
 config();
 
@@ -9,15 +10,6 @@ config();
 export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
-
-const textToolReturnType = z.object({
-    content: z.array(z.object({
-        type: z.literal("text"),
-        text: z.string()
-    }))
-});
-
-type GenericTextReturnType = z.infer<typeof textToolReturnType>
 
 /**
  * Search for a page in your notion database
@@ -143,7 +135,7 @@ export const appendBlock = async({
     children,
 }: {
     blockId: string,
-    children: Array<BlockObjectRequest>
+    children: Array<BlockObjectRequestWithoutChildren>
 }) => {
     const response = await notion.blocks.children.append({
         block_id: blockId,
@@ -155,7 +147,7 @@ export const appendBlock = async({
             {
                 type: "text",
                 text: JSON.stringify(response),
-            }
+            },
         ]
     };
 };
