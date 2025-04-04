@@ -130,6 +130,11 @@ export const createSimplePageInsidePage = async ({
     }
   };
 
+/**
+ * Notion's append block pattern. Using a list of BlockObjectRequestWithoutChildren.
+ * @param param0
+ * @returns
+ */
 export const appendBlock = async({
     blockId,
     children,
