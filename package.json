@@ -1,5 +1,5 @@
 {
-  "name": "mcp-server-with-bun",
+  "name": "my-notion-mcp-server",
   "module": "index.ts",
   "type": "module",
   "private": true,

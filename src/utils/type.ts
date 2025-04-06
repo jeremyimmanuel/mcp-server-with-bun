@@ -28,9 +28,11 @@ export const notionRichTextZod = z.object({
             "yellow_background", "green_background", "blue_background", "purple_background",
             "pink_background", "red_background"
         ]),
-    }),
-    plain_text: z.string(),
-    href: z.string().optional(),
+    }).optional(),
+
+    // these are for rich text response but not the request
+    // plain_text: z.string(),
+    // href: z.string().optional(),
 });
 
 export const ApiColorZod = z.enum([
